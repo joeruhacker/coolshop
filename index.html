@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8"> <!-- Определяет набор символов документа -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Устанавливает параметры просмотра для мобильных устройств -->
+    <title>Добро пожаловать в наш магазин!</title> <!-- Заголовок страницы -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> <!-- Подключает шрифт Roboto из Google Fonts -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif; /* Устанавливает шрифт для текста на странице */
+            margin: 0; /* Убирает внешние отступы */
+            padding: 0; /* Убирает внутренние отступы */
+            background-color: #f7f7f7; /* Устанавливает цвет фона страницы */
+            color: #333; /* Устанавливает цвет текста */
+            overflow-x: hidden; /* Отключает горизонтальную прокрутку */
+        }
+        * {
+            box-sizing: border-box; /* Включает модульную модель коробки */
+            margin: 0; /* Убирает внешние отступы */
+            padding: 0; /* Убирает внутренние отступы */
+        }
+        .header {
+            display: none; /* Скрывает элемент с классом header */
+        }
+        .container {
+            margin: 20px auto; /* Устанавливает внешние отступы и центрирует контейнер по горизонтали */
+            padding: 20px; /* Устанавливает внутренние отступы */
+            text-align: center; /* Центрирует текст */
+            max-width: 1200px; /* Устанавливает максимальную ширину контейнера */
+            width: 100%; /* Устанавливает ширину контейнера на 100% */
+        }
+        .categories {
+            display: flex; /* Устанавливает флекс-контейнер */
+            justify-content: center; /* Центрирует элементы по горизонтали */
+            margin-bottom: 20px; /* Устанавливает нижний внешний отступ */
+        }
+        .categories button {
+            margin: 0 10px; /* Устанавливает горизонтальные внешние отступы */
+            padding: 10px 13px; /* Устанавливает внутренние отступы */
+            background-color: #000; /* Устанавливает цвет фона кнопки */
+            color: #fff; /* Устанавливает цвет текста кнопки */
+            border: none; /* Убирает рамку кнопки */
+            border-radius: 20px; /* Закругляет углы кнопки */
+            cursor: pointer; /* Устанавливает вид курсора */
+            transition: background-color 0.3s ease; /* Добавляет плавный переход цвета фона */
+            font-family: 'Roboto', sans-serif; /* Устанавливает шрифт для кнопки */
+        }
+        .categories button:hover {
+            background-color: #333; /* Изменяет цвет фона при наведении */
+        }
+        .products {
+            display: grid; /* Устанавливает сетку для контейнера */
+            grid-template-columns: repeat(2, 1fr); /* Устанавливает две колонки одинаковой ширины */
+            gap: 20px; /* Устанавливает расстояние между элементами */
+            justify-content: center; /* Центрирует элементы по горизонтали */
+            margin-left: -15px; /* Сдвигает товары на 15 пикселей влево */
+        }
+        .product-card {
+            background-color: #fff; /* Устанавливает цвет фона карточки товара */
+            border-radius: 10px; /* Закругляет углы карточки */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Добавляет тень */
+            overflow: hidden; /* Обрезает содержимое, выходящее за границы */
+            text-align: center; /* Центрирует текст */
+            padding: 10px; /* Устанавливает внутренние отступы */
+            cursor: pointer; /* Устанавливает вид курсора */
+            transition: transform 0.3s ease; /* Добавляет плавный переход трансформации */
+        }
+        .product-card:hover {
+            transform: scale(1.05); /* Увеличивает карточку при наведении */
+        }
+        .product-card img {
+            width: 100%; /* Устанавливает ширину изображения на 100% */
+            height: auto; /* Автоматически устанавливает высоту изображения */
+        }
+        .product-card h3 {
+            font-size: 16px; /* Устанавливает размер шрифта */
+            margin: 10px 0; /* Устанавливает вертикальные внешние отступы */
+            color: #333; /* Устанавливает цвет текста */
+            font-family: 'Roboto', sans-serif; /* Устанавливает шрифт */
+        }
+        .product-card .subheading {
+            font-size: 14px; /* Устанавливает размер шрифта для подзаголовка */
+            color: #666; /* Устанавливает цвет текста */
+            text-align: center; /* Центрирует текст */
+            margin-bottom: 10px; /* Устанавливает нижний внешний отступ */
+        }
+        .product-card .price {
+            font-size: 18px; /* Устанавливает размер шрифта для цены */
+            font-weight: bold; /* Делает текст жирным */
+            margin: 10px 0; /* Устанавливает вертикальные внешние отступы */
+            color: #333; /* Устанавливает цвет текста */
+            font-family: 'Roboto', sans-serif; /* Устанавливает шрифт */
+        }
+        .modal {
+            display: none; /* Скрывает модальное окно */
+            position: fixed; /* Фиксирует позицию окна */
+            z-index: 1001; /* Устанавливает приоритет отображения */
+            left: 0; /* Устанавливает позицию слева */
+            top: 0; /* Устанавливает позицию сверху */
+            width: 100%; /* Устанавливает ширину на 100% */
+            height: 100%; /* Устанавливает высоту на 100% */
+            overflow: auto; /* Добавляет прокрутку */
+            background-color: rgba(0, 0, 0, 0.8); /* Устанавливает цвет фона с прозрачностью */
+            padding-top: 60px; /* Устанавливает верхний внутренний отступ */
+            box-sizing: border-box; /* Включает модульную модель коробки */
+        }
+        .modal-content {
+            background-color: #fefefe; /* Устанавливает цвет фона модального окна */
+            margin: 5% auto; /* Центрирует окно по горизонтали и задает верхний внешний отступ */
+            padding: 20px; /* Устанавливает внутренние отступы */
+            border: 1px solid #888; /* Устанавливает границу */
+            width: 80%; /* Устанавливает ширину на 80% */
+            max-width: 500px; /* Устанавливает максимальную ширину */
+            border-radius: 10px; /* Закругляет углы */
+            text-align: center; /* Центрирует текст */
+            color: #333; /* Устанавливает цвет текста */
+            font-family: 'Roboto', sans-serif; /* Устанавливает шрифт */
+        }
+        .close {
+            color: #aaa; /* Устанавливает цвет текста */
+            float: right; /* Выравнивает элемент вправо */
+            font-size: 28px; /* Устанавливает размер шрифта */
+            font-weight: bold; /* Делает текст жирным */
+        }
+        .close:hover,
+        .close:focus {
+            color: black; /* Изменяет цвет текста при наведении и фокусе */
+            text-decoration: none; /* Убирает подчеркивание */
+            cursor: pointer; /* Устанавливает вид курсора */
+        }
+        .quantity-selector {
+            display: flex; /* Устанавливает флекс-контейнер */
+            justify-content: center; /* Центрирует элементы по горизонтали */
+            align-items: center; /* Центрирует элементы по вертикали */
+            margin: 20px 0; /* Устанавливает вертикальные внешние отступы */
+        }
+        .quantity-selector button {
+            padding: 10px 20px; /* Устанавливает внутренние отступы */
+            background-color: #000; /* Устанавливает цвет фона кнопки */
+            color: #fff; /* Устанавливает цвет текста кнопки */
+            border: none; /* Убирает рамку кнопки */
+            border-radius: 20px; /* Закругляет углы кнопки */
+            cursor: pointer; /* Устанавливает вид курсора */
+            transition: background-color 0.3s ease; /* Добавляет плавный переход цвета фона */
+            font-family: 'Roboto', sans-serif; /* Устанавливает шрифт для кнопки */
+        }
+        .quantity-selector button:hover {
+            background-color: #333; /* Изменяет цвет фона при наведении */
+        }
+        .quantity-selector span {
+            margin: 0 20px; /* Устанавливает горизонтальные внешние отступы */
+            font-size: 18px; /* Устанавливает размер шрифта */
+            color: #333; /* Устанавливает цвет текста */
+            font-family: 'Roboto', sans-serif; /* Устанавливает шрифт */
+        }
+        .add-to-cart {
+            padding: 10px 20px; /* Устанавливает внутренние отступы */
+            background-color: #000; /* Устанавливает цвет фона кнопки */
+            color: #fff; /* Устанавливает цвет текста кнопки */
+            border: none; /* Убирает рамку кнопки */
+            border-radius: 20px; /* Закругляет углы кнопки */
+            cursor: pointer; /* Устанавливает вид курсора */
+            transition: background-color 0.3s ease; /* Добавляет плавный переход цвета фона */
+            font-family: 'Roboto', sans-serif; /* Устанавливает шрифт для кнопки */
+        }
+        .add-to-cart:hover {
+            background-color: #333; /* Изменяет цвет фона при наведении */
+        }
+        .cart {
+            margin: 20px 0; /* Устанавливает вертикальные внешние отступы */
+            padding: 15px; /* Устанавливает внутренние отступы */
+            background: #f9f9f9; /* Устанавливает цвет фона */
+            border: 1px solid #ddd; /* Устанавливает границу */
+            border-radius: 10px; /* Закругляет углы */
+            margin-left: -20px; /* Сдвигает корзину влево */
+        }
+        .cart-item {
+            display: flex; /* Устанавливает флекс-контейнер */
+            justify-content: space-between; /* Распределяет элементы с пространством между ними */
+            border-bottom: 1px solid #ddd; /* Устанавливает нижнюю границу */
+            padding: 10px 0; /* Устанавливает вертикальные внутренние отступы */
+        }
+        .cart-total {
+            text-align: right; /* Выравнивает текст по правому краю */
+            margin: 20px 0; /* Устанавливает вертикальные внешние отступы */
+            font-weight: 600; /* Делает текст полужирным */
+            color: #333; /* Устанавливает цвет текста */
+        }
+        .order-form {
+            display: none; /* Скрывает форму заказа */
+            margin: 20px 0; /* Устанавливает вертикальные внешние отступы */
+            padding: 15px; /* Устанавливает внутренние отступы */
+            background: #f9f9f9; /* Устанавливает цвет фона */
+            border: 1px solid #ddd; /* Устанавливает границу */
+            border-radius: 10px; /* Закругляет углы */
+        }
+        .order-form input, .order-form select, .order-form button {
+            display: block; /* Устанавливает блочный тип отображения */
+            width: 100%; /* Устанавливает ширину на 100% */
+            margin: 10px 0; /* Устанавливает вертикальные внешние отступы */
+            padding: 15px; /* Устанавливает внутренние отступы */
+            font-size: 16px; /* Устанавливает размер шрифта */
+            border: 1px solid #ddd; /* Устанавливает границу */
+            border-radius: 10px; /* Закругляет углы */
+        }
+        .order-form button {
+            background: #333; /* Устанавливает цвет фона кнопки */
+            color: white; /* Устанавливает цвет текста кнопки */
+            border: none; /* Убирает рамку кнопки */
+            cursor: pointer; /* Устанавливает вид курсора */
+            font-weight: 600; /* Делает текст полужирным */
+            transition: background 0.3s; /* Добавляет плавный переход цвета фона */
+        }
+        .order-form button:hover {
+            background: #555; /* Изменяет цвет фона при наведении */
+        }
+        .order-form-header {
+            display: flex; /* Устанавливает флекс-контейнер */
+            justify-content: space-between; /* Распределяет элементы с пространством между ними */
+            align-items: center; /* Центрирует элементы по вертикали */
+            margin-bottom: 20px; /* Устанавливает нижний внешний отступ */
+        }
+        .back-to-cart {
+            padding: 10px 20px; /* Устанавливает внутренние отступы */
+            background-color: #000; /* Устанавливает цвет фона кнопки */
+            color: #fff; /* Устанавливает цвет текста кнопки */
+            border: none; /* Убирает рамку кнопки */
+            border-radius: 20px; /* Закругляет углы кнопки */
+            cursor: pointer; /* Устанавливает вид курсора */
+            transition: background-color 0.3s ease; /* Добавляет плавный переход цвета фона */
+            font-family: 'Roboto', sans-serif; /* Устанавливает шрифт для кнопки */
+        }
+        .back-to-cart:hover {
+            background-color: #333; /* Изменяет цвет фона при наведении */
+        }
+        .order-summary {
+            font-size: 18px; /* Устанавливает размер шрифта */
+            color: #333; /* Устанавливает цвет текста */
+            margin-bottom: 20px; /* Устанавливает нижний внешний отступ */
+        }
+        .categories-button {
+            margin: 0 10px; /* Устанавливает горизонтальные внешние отступы */
+            padding: 10px 20px; /* Устанавливает внутренние отступы */
+            background-color: #000; /* Устанавливает цвет фона кнопки */
+            color: #fff; /* Устанавливает цвет текста кнопки */
+            border: none; /* Убирает рамку кнопки */
+            border-radius: 20px; /* Закругляет углы кнопки */
+            cursor: pointer; /* Устанавливает вид курсора */
+            transition: background-color 0.3s ease; /* Добавляет плавный переход цвета фона */
+            font-family: 'Roboto', sans-serif; /* Устанавливает шрифт для кнопки */
+        }
+        .categories-button:hover {
+            background-color: #333; /* Изменяет цвет фона при наведении */
+        }
+        .promo-code-container {
+            display: flex; /* Устанавливает флекс-контейнер */
+            justify-content: space-between; /* Распределяет элементы с пространством между ними */
+            align-items: center; /* Центрирует элементы по вертикали */
+        }
+        .promo-code-container button {
+            flex: 1; /* Устанавливает гибкость элемента */
+            margin-left: 10px; /* Устанавливает левый внешний отступ */
+            padding: 5px 10px; /* Устанавливает внутренние отступы */
+            font-size: 13px; /* Устанавливает размер шрифта */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; font-family: 'Roboto', sans-serif;">Добро пожаловать в наш магазин!</h1> <!-- Заголовок страницы -->
+        <div class="categories">
+            <button onclick="showSection('capsules')">Капсулы</button> <!-- Кнопка для отображения раздела с капсулами -->
+            <button onclick="showSection('powder')">Порошок</button> <!-- Кнопка для отображения раздела с порошком -->
+            <button onclick="showSection('caps')">Шляпки</button> <!-- Кнопка для отображения раздела с шляпками -->
+        </div>
+
+        <div id="capsules" class="products-section">
+            <h2 style="font-family: 'Roboto', sans-serif;">Капсулы</h2> <!-- Заголовок раздела с капсулами -->
+            <div class="products">
+                <div class="product-card" onclick="showModal('Пантерный мухомор', '60 капсул по 300 mg', '3.500 руб.', 'Для позитивного настроя и эмоционального баланса. Мощный антидепрессант, успокаивает ум, нормализует циркадные ритмы, запускает процессы глубокой саморефлексии\n\nОсновные эффекты:\n- Улучшает качество сна и способствует легкому пробуждению\n- Уменьшает проявления депрессивных состояний\n- Уменьшает раздражительность и тревожность\n- Улучшает когнитивные функции\n- Повышает устойчивость к стрессу\n- Запускает глубокие процессы саморефлексии\n- Помогает легче справляться с зависимостями\n- Увеличивает выносливость при физических нагрузках', 'https://i.pinimg.com/736x/33/10/e1/3310e141ebc2cba140dfc8ace1090ed5.jpg')">
+                    <img src="https://i.pinimg.com/736x/33/10/e1/3310e141ebc2cba140dfc8ace1090ed5.jpg" alt="Product Image"> <!-- Изображение товара -->
+                    <h3>Пантерный мухомор</h3> <!-- Название товара -->
+                    <p class="subheading">60 капсул по 300 mg</p> <!-- Подзаголовок товара -->
+                    <div class="price">3.500 руб.</div> <!-- Цена товара -->
+                </div>
+                <div class="product-card" onclick="showModal('Мицелий ежовика гребенчатого', '60 капсул по 500 mg', '2.000 руб.', 'Для креативности, интеллекта, улучшения когнитивных функций, укрепления памяти и внимания.\n\nОсновные эффекты:\n- Улучшает процессы обучения и усвоения новой информации\n- Стимулирует творческий процесс\n- Снижает чувство тревоги\n- Улучшает краткосрочную и долгосрочную память\n- Повышает концентрацию внимания и ясность мыслей\n- Уменьшает возрастные проявления деменции', 'https://i.pinimg.com/736x/c1/1a/68/c11a684836cbd6e29163dd5b8c2c9e91.jpg')">
+                    <img src="https://i.pinimg.com/736x/c1/1a/68/c11a684836cbd6e29163dd5b8c2c9e91.jpg" alt="Product Image">
+                    <h3>Мицелий ежовика гребенчатого</h3>
+                    <p class="subheading">60 капсул по 500 mg</p>
+                    <div class="price">2.000 руб.</div>
+                </div>
+                <div class="product-card" onclick="showModal('Мицелий ежовика гребенчатого', '90 капсул по 500 mg', '2.700 руб.', 'Для креативности, интеллекта, улучшения когнитивных функций, укрепления памяти и внимания.\n\nОсновные эффекты:\n- Улучшает процессы обучения и усвоения новой информации\n- Стимулирует творческий процесс\n- Снижает чувство тревоги\n- Улучшает краткосрочную и долгосрочную память\n- Повышает концентрацию внимания и ясность мыслей\n- Уменьшает возрастные проявления деменции', 'https://i.pinimg.com/736x/c1/1a/68/c11a684836cbd6e29163dd5b8c2c9e91.jpg')">
+                    <img src="https://i.pinimg.com/736x/c1/1a/68/c11a684836cbd6e29163dd5b8c2c9e91.jpg" alt="Product Image">
+                    <h3>Мицелий ежовика гребенчатого</h3>
+                    <p class="subheading">90 капсул по 500 mg</p>
+                    <div class="price">2.700 руб.</div>
+                </div>
+                <div class="product-card" onclick="showModal('Красный мухомор', '90 капсул по 350 mg', '3.500 руб.', 'Для позитивного настроя и эмоционального баланса. Повышает устойчивость к стрессу, улучшает настроение, нормализует циркадные ритмы.\n\nОсновные эффекты:\n- Улучшает качество сна и способствует легкому пробуждению\n- Уменьшает проявления депрессивных состояний\n- Уменьшает раздражительность и тревожность\n- Улучшает когнитивные функции\n- Повышает устойчивость к стрессу\n- Помогает легче справляться с зависимостями\n- Увеличивает выносливость при физических нагрузках', 'https://i.pinimg.com/736x/f6/04/ab/f604ab56e1f42de29546a3fe0cd2019f.jpg')">
+                    <img src="https://i.pinimg.com/736x/f6/04/ab/f604ab56e1f42de29546a3fe0cd2019f.jpg" alt="Product Image">
+                    <h3>Красный мухомор</h3>
+                    <p class="subheading">90 капсул по 350 mg</p>
+                    <div class="price">3.500 руб.</div>
+                </div>
+                <div class="product-card" onclick="showModal('Красный мухомор', '60 капсул по 350 mg', '2.500 руб.', 'Для позитивного настроя и эмоционального баланса. Повышает устойчивость к стрессу, улучшает настроение, нормализует циркадные ритмы.\n\nОсновные эффекты:\n- Улучшает качество сна и способствует легкому пробуждению\n- Уменьшает проявления депрессивных состояний\n- Уменьшает раздражительность и тревожность\n- Улучшает когнитивные функции\n- Повышает устойчивость к стрессу\n- Помогает легче справляться с зависимостями\n- Увеличивает выносливость при физических нагрузках', 'https://i.pinimg.com/736x/f6/04/ab/f604ab56e1f42de29546a3fe0cd2019f.jpg')">
+                    <img src="https://i.pinimg.com/736x/f6/04/ab/f604ab56e1f42de29546a3fe0cd2019f.jpg" alt="Product Image">
+                    <h3>Красный мухомор</h3>
+                    <p class="subheading">60 капсул по 350 mg</p>
+                    <div class="price">2.500 руб.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="powder" class="products-section" style="display: none;">
+            <h2 style="font-family: 'Roboto', sans-serif;">Порошок</h2> <!-- Заголовок раздела с порошком -->
+            <div class="products">
+                <div class="product-card" onclick="showModal('Скоро в продаже!', '', '0 руб.', 'Скоро в продаже!', 'https://i.pinimg.com/originals/38/99/e2/3899e28d84ff5735f446deccf4923976.webp')">
+                    <img src="https://i.pinimg.com/originals/38/99/e2/3899e28d84ff5735f446deccf4923976.webp" alt="Product Image">
+                    <h3>Скоро в продаже!</h3>
+                    <div class="price">0 руб.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="caps" class="products-section" style="display: none;">
+            <h2 style="font-family: 'Roboto', sans-serif;">Шляпки</h2> <!-- Заголовок раздела с шляпками -->
+            <div class="products">
+                <div class="product-card" onclick="showModal('Скоро в продаже!', '', '0 руб.', 'Скоро в продаже!', 'https://i.pinimg.com/originals/38/99/e2/3899e28d84ff5735f446deccf4923976.webp')">
+                    <img src="https://i.pinimg.com/originals/38/99/e2/3899e28d84ff5735f446deccf4923976.webp" alt="Product Image">
+                    <h3>Скоро в продаже!</h3>
+                    <div class="price">0 руб.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span> <!-- Кнопка закрытия модального окна -->
+            <img id="modalImage" src="" alt="Product Image" style="width: 100%; height: auto;"> <!-- Изображение в модальном окне -->
+            <h2 id="modalTitle" style="font-family: 'Roboto', sans-serif;"></h2> <!-- Заголовок модального окна -->
+            <p id="modalSubheading" class="subheading" style="text-align: center;"></p> <!-- Подзаголовок модального окна -->
+            <p id="modalPrice" style="font-family: 'Roboto', sans-serif; font-weight: bold;"></p> <!-- Цена в модальном окне -->
+            <p id="modalDescription" style="font-family: 'Roboto', sans-serif; text-align: center; white-space: pre-wrap;"></p> <!-- Описание товара в модальном окне -->
+            <div class="quantity-selector">
+                <button onclick="updateQuantity(-1)">-</button> <!-- Кнопка уменьшения количества -->
+                <span id="quantity">1</span> <!-- Текущее количество -->
+                <button onclick="updateQuantity(1)">+</button> <!-- Кнопка увеличения количества -->
+            </div>
+            <button class="add-to-cart" onclick="addToCart()">В корзину</button> <!-- Кнопка добавления в корзину -->
+        </div>
+    </div>
+
+    <div class="cart">
+        <h2>Корзина</h2> <!-- Заголовок корзины -->
+        <div id="cart-items"></div> <!-- Элементы корзины -->
+        <div class="cart-total" id="cart-total">Всего: 0 руб</div> <!-- Общая сумма корзины -->
+        <div class="promo-code-container">
+            <input type="text" id="promo-code" placeholder="Введите промокод"> <!-- Поле ввода промокода -->
+            <button class="categories-button promo-button" onclick="applyPromoCode()">Применить промокод</button> <!-- Кнопка применения промокода -->
+        </div>
+        <button class="categories-button" onclick="showOrderForm()">Оформить заказ</button> <!-- Кнопка оформления заказа -->
+    </div>
+
+    <div class="order-form" id="order-form">
+        <div class="order-form-header">
+            <h2>Форма доставки</h2> <!-- Заголовок формы доставки -->
+        </div>
+        <div class="order-summary" id="order-summary"></div> <!-- Краткое описание заказа -->
+        <input type="text" id="customer-first-name" placeholder="Имя" required> <!-- Поле ввода имени -->
+        <input type="text" id="customer-last-name" placeholder="Фамилия" required> <!-- Поле ввода фамилии -->
+        <input type="text" id="customer-country" placeholder="Страна" required> <!-- Поле ввода страны -->
+        <input type="text" id="customer-city" placeholder="Город" required> <!-- Поле ввода города -->
+        <input type="text" id="customer-street" placeholder="Улица" required> <!-- Поле ввода улицы -->
+        <input type="text" id="customer-apartment" placeholder="Квартира/дом" required> <!-- Поле ввода квартиры/дома -->
+        <input type="text" id="customer-zip" placeholder="Индекс" required> <!-- Поле ввода индекса -->
+        <input type="tel" id="customer-phone" placeholder="Телефон" required> <!-- Поле ввода телефона -->
+        <input type="email" id="customer-email" placeholder="Электронная почта" required> <!-- Поле ввода электронной почты -->
+        <select id="delivery-method" required> <!-- Выбор способа доставки -->
+            <option value="" disabled selected>Выберите способ доставки</option>
+            <option value="Почта России">Почта России</option>
+            <option value="СДЭК">СДЭК</option>
+            <option value="Boxberry">Boxberry</option>
+        </select>
+        <h2>Оплата</h2> <!-- Заголовок раздела оплаты -->
+        <select id="payment-method" required onchange="toggleWalletConnectButton(this.value)"> <!-- Выбор способа оплаты -->
+            <option value="" disabled selected>Выберите способ оплаты</option>
+            <option value="Карта">Карта</option>
+            <option value="Криптовалюта">Криптовалюта (скидка 5%)</option>
+        </select>
+        <button onclick="placeOrder()">Заказать</button> <!-- Кнопка оформления заказа -->
+        <div id="walletconnect-button" style="display: none;">
+            <button onclick="connectWallet()">Подключить Wallet</button> <!-- Кнопка подключения кошелька -->
+        </div>
+        <button class="back-to-cart" onclick="hideOrderForm()">Назад</button> <!-- Кнопка возврата к корзине -->
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script> <!-- Подключение библиотеки CryptoJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/client@1.6.6/dist/umd/index.min.js"></script> <!-- Подключение библиотеки WalletConnect -->
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/qrcode-modal@1.6.1/dist/umd/index.min.js"></script> <!-- Подключение модуля QR-кодов WalletConnect -->
+    <script>
+        let cart = []; // Инициализация пустого массива корзины
+        let promoCodeApplied = false; // Флаг применения промокода
+        let walletConnector = null; // Инициализация переменной для WalletConnect
+        const promoCodes = {
+            'DISCOUNT5': 0.05,
+            'DISCOUNT10': 0.10
+        }; // Объект с доступными промокодами
+        let currentQuantity = 1; // Текущее количество товара
+
+        function showSection(section) {
+            document.getElementById('capsules').style.display = 'none';
+            document.getElementById('powder').style.display = 'none';
+            document.getElementById('caps').style.display = 'none';
+            document.getElementById(section).style.display = 'block';
+        } // Функция отображения выбранного раздела товаров
+
+        function showModal(title, subheading, price, description, imageUrl) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalSubheading').innerText = subheading;
+            document.getElementById('modalPrice').innerText = price;
+            document.getElementById('modalDescription').innerText = description;
+            document.getElementById('modalImage').src = imageUrl;
+            document.getElementById('productModal').style.display = "block";
+            currentQuantity = 1;
+            document.getElementById('quantity').innerText = currentQuantity;
+        } // Функция отображения модального окна с информацией о товаре
+
+        function closeModal() {
+            document.getElementById('productModal').style.display = "none";
+        } // Функция закрытия модального окна
+
+        function updateQuantity(amount) {
+            currentQuantity += amount;
+            if (currentQuantity < 1) {
+                currentQuantity = 1;
+            }
+            document.getElementById('quantity').innerText = currentQuantity;
+        } // Функция обновления количества товара
+
+        function addToCart() {
+            const title = document.getElementById('modalTitle').innerText;
+            const subheading = document.getElementById('modalSubheading').innerText;
+            const price = parseInt(document.getElementById('modalPrice').innerText.replace(' руб.', '').replace('.', ''));
+            const quantity = currentQuantity;
+            const total = price * quantity;
+
+            cart.push({ title, subheading, price, quantity, total });
+            updateCart();
+
+            closeModal();
+        } // Функция добавления товара в корзину
+
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            cartItems.innerHTML = '';
+            let total = 0;
+
+            cart.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `<span>${item.title} (${item.subheading})</span><span>${item.price.toLocaleString()} руб</span><span>Количество: ${item.quantity}</span>`;
+                cartItems.appendChild(div);
+                total += item.total;
+            });
+
+            if (promoCodeApplied) {
+                total = applyDiscount(total);
+            }
+
+            cartTotal.innerHTML = `Всего: ${total.toLocaleString()} руб`;
+        } // Функция обновления содержимого корзины
+
+        function applyPromoCode() {
+            const promoCode = document.getElementById('promo-code').value;
+            if (promoCodes[promoCode]) {
+                promoCodeApplied = promoCodes[promoCode];
+                updateCart();
+                alert('Промокод успешно применен!');
+            } else {
+                alert('Неверный промокод!');
+            }
+        } // Функция применения промокода
+
+        function applyDiscount(total) {
+            if (promoCodeApplied) {
+                total -= total * promoCodeApplied;
+            }
+            return total;
+        } // Функция применения скидки
+
+        function showOrderForm() {
+            if (cart.length === 0) {
+                alert('Корзина пуста. Пожалуйста, добавьте товары в корзину перед оформлением заказа.');
+                return;
+            }
+            document.querySelector('.container').style.display = 'none';
+            document.querySelector('.cart').style.display = 'none';
+            document.getElementById('order-form').style.display = 'block';
+            updateOrderSummary();
+            populateFormFields();
+        } // Функция отображения формы заказа
+
+        function hideOrderForm() {
+            document.querySelector('.container').style.display = 'block';
+            document.querySelector('.cart').style.display = 'block';
+            document.getElementById('order-form').style.display = 'none';
+        } // Функция скрытия формы заказа
+
+        function updateOrderSummary() {
+            const orderSummary = document.getElementById('order-summary');
+            let total = 0;
+            let itemCount = 0;
+
+            cart.forEach(item => {
+                itemCount += item.quantity;
+                total += item.total;
+            });
+
+            orderSummary.innerHTML = `Количество товаров: ${itemCount}<br>Итоговая сумма: ${total.toLocaleString()} руб.`;
+        } // Функция обновления краткого описания заказа
+
+        function toggleWalletConnectButton(paymentMethod) {
+            if (paymentMethod === 'Криптовалюта') {
+                document.getElementById('walletconnect-button').style.display = 'block';
+            } else {
+                document.getElementById('walletconnect-button').style.display = 'none';
+            }
+        } // Функция отображения кнопки WalletConnect при выборе криптовалюты
+
+        async function placeOrder() {
+            const firstName = document.getElementById('customer-first-name').value;
+            const lastName = document.getElementById('customer-last-name').value;
+            const country = document.getElementById('customer-country').value;
+            const city = document.getElementById('customer-city').value;
+            const street = document.getElementById('customer-street').value;
+            const apartment = document.getElementById('customer-apartment').value;
+            const zip = document.getElementById('customer-zip').value;
+            const phone = document.getElementById('customer-phone').value;
+            const email = document.getElementById('customer-email').value;
+            const deliveryMethod = document.getElementById('delivery-method').value;
+            const paymentMethod = document.getElementById('payment-method').value;
+
+            if (!firstName || !lastName || !country || !city || !street || !apartment || !zip || !phone || !email || !deliveryMethod || !paymentMethod) {
+                alert('Заполните пожалуйста все формы');
+                return;
+            }
+
+            // Сохранение данных пользователя в localStorage
+            const userData = {
+                firstName, lastName, country, city, street, apartment, zip, phone, email
+            };
+            localStorage.setItem('userData', JSON.stringify(userData));
+
+            let total = cart.reduce((sum, item) => sum + item.total, 0);
+
+            if (paymentMethod === 'Криптовалюта') {
+                toggleWalletConnectButton(paymentMethod);
+                return;
+            }
+
+            const orderDetails = cart.map(item => `${item.title} (${item.subheading}) - ${item.price.toLocaleString()} руб - Количество: ${item.quantity}`).join(', ');
+
+            const signature = CryptoJS.MD5(`your_robokassa_login:${total}:${Date.now()}:your_robokassa_password1`).toString();
+
+            const robokassaUrl = `https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=your_robokassa_login&OutSum=${total}&InvId=${Date.now()}&Description=${encodeURIComponent(orderDetails)}&SignatureValue=${signature}`;
+
+            window.location.href = robokassaUrl;
+        } // Функция оформления заказа
+
+        function connectWallet() {
+            walletConnector = new WalletConnect.default({
+                bridge: "https://bridge.walletconnect.org" // Required
+            });
+
+            if (!walletConnector.connected) {
+                walletConnector.createSession().then(() => {
+                    const uri = walletConnector.uri;
+                    WalletConnectQRCodeModal.default.open(uri, () => {
+                        console.log("QR Code Modal closed");
+                    });
+                });
+            }
+
+            walletConnector.on("connect", (error, payload) => {
+                if (error) {
+                    throw error;
+                }
+
+                WalletConnectQRCodeModal.default.close();
+
+                const { accounts, chainId } = payload.params[0];
+                console.log(accounts, chainId);
+
+                const from = accounts[0];
+                const to = "YOUR_PAYMENT_ADDRESS";
+                const value = total * 10 ** 18;
+
+                const tx = {
+                    from,
+                    to,
+                    value,
+                };
+
+                walletConnector.sendTransaction(tx).then(result => {
+                    console.log(result);
+                    alert('Оплата успешно проведена!');
+                }).catch(error => {
+                    console.error(error);
+                    alert('Ошибка при оплате!');
+                });
+            });
+
+            walletConnector.on("session_update", (error, payload) => {
+                if (error) {
+                    throw error;
+                }
+
+                const { accounts, chainId } = payload.params[0];
+                console.log(accounts, chainId);
+            });
+
+            walletConnector.on("disconnect", (error, payload) => {
+                if (error) {
+                    throw error;
+                }
+
+                walletConnector = null;
+            });
+        } // Функция подключения кошелька
+
+        // Функция для автозаполнения формы при наличии сохраненных данных
+        function populateFormFields() {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            if (userData) {
+                document.getElementById('customer-first-name').value = userData.firstName;
+                document.getElementById('customer-last-name').value = userData.lastName;
+                document.getElementById('customer-country').value = userData.country;
+                document.getElementById('customer-city').value = userData.city;
+                document.getElementById('customer-street').value = userData.street;
+                document.getElementById('customer-apartment').value = userData.apartment;
+                document.getElementById('customer-zip').value = userData.zip;
+                document.getElementById('customer-phone').value = userData.phone;
+                document.getElementById('customer-email').value = userData.email;
+            }
+        }
+
+        // Автозаполнение формы при загрузке страницы
+        document.addEventListener('DOMContentLoaded', populateFormFields);
+    </script>
+</body>
+</html>
